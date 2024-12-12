@@ -1,0 +1,32 @@
+@startuml
+|ClientService|
+start
+
+:클라이언트로부터 닉네임 수신;
+
+if (닉네임 고유?) then (예)
+  :닉네임 승인 ("NICK_OK") 전송;
+  :채팅 참여 알림 전송;
+else (아니오)
+  :닉네임 중복 알림 ("NICK_IN_USE") 전송;
+  :다시 닉네임 수신 대기;
+endif
+
+:메시지 수신 루프 시작;
+
+while (클라이언트 연결 유지)
+  :메시지 수신;
+  if (메시지 명령어 처리) then (예)
+    :명령어에 따른 처리 (예: /rename, /to, /img, /getimg);
+  else if (메시지 == "quit") then (종료)
+    break
+  else
+    :메시지 포맷팅 및 브로드캐스트;
+  endif
+endwhile
+
+:퇴장 알림 전송;
+:클라이언트 정보 제거;
+:연결 종료;
+stop
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+|ChatServer|
+start
+
+:서버 시작 (포트 번호);
+:클라이언트 연결 대기;
+
+fork
+  while (서버 실행 중)
+    :클라이언트 연결 수락;
+    :새 ClientService 생성;
+  endwhile
+end fork
+
+:명령어 입력 대기 (예: quit);
+
+if (입력 == "quit") then (종료)
+  :서버 종료;
+  stop
+endif
+
+:계속 실행;
+stop
+@enduml
